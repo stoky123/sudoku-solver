@@ -36,25 +36,25 @@ def print_table(table):
 
 
 def solve_next_place(empty_places, table):
-    if not empty_places:
+    if empty_places:
+        x = empty_places[0][0]
+        y = empty_places[0][1]
+        valid_numbers = find_valid_numbers(x, y, table)
+
+        if not valid_numbers:
+            table[x][y] = 0
+            return False
+            
+        for number in valid_numbers:
+            table[x][y] = number
+
+            if solve_next_place(empty_places[1:], table):
+                return True
+
+            table[x][y] = 0
+    else:
         print_table(table)
         return True
-
-    x = empty_places[0][0]
-    y = empty_places[0][1]
-    valid_numbers = find_valid_numbers(x, y, table)
-
-    if not valid_numbers:
-        table[x][y] = 0
-        return False
-        
-    for number in valid_numbers:
-        table[x][y] = number
-
-        if solve_next_place(empty_places[1:], table):
-            return True
-
-        table[x][y] = 0
 
 
 def solve(table):

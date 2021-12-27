@@ -1,5 +1,6 @@
 import time
 
+
 tables = [
     [
         [0, 0, 0, 8, 0, 1, 0, 0, 0],
@@ -25,6 +26,7 @@ tables = [
     ]
 ]
 
+
 def print_table(table):
     print("-" * 38)
     for i in range(3):
@@ -33,30 +35,32 @@ def print_table(table):
         print("-" * 38)
 
 
-def solve(x, y, table):
-    if table[x][y] == 0:
-        valid_numbers = find_valid_numbers(x, y, table)
-        if not valid_numbers:
-            table[x][y] = 0
-            return
-        for number in valid_numbers:
-            table[x][y] = number
-            if x == y == 8:
-                print_table(table)
-                exit()
-            else:
-                i = x
-                j = y
-                while table[i][j] != 0:
-                    if i == 8:
-                        j = j + 1
-                        i = 0
-                    else:
-                        i = i + 1
+def solve_next_place(empty_places, table):
+    if not empty_places:
+        print_table(table)
+        return True
 
-                solve(i, j, table)
+    x = empty_places[0][0]
+    y = empty_places[0][1]
+    valid_numbers = find_valid_numbers(x, y, table)
 
-            table[x][y] = 0
+    if not valid_numbers:
+        table[x][y] = 0
+        return False
+        
+    for number in valid_numbers:
+        table[x][y] = number
+
+        if solve_next_place(empty_places[1:], table):
+            return True
+
+        table[x][y] = 0
+
+
+def solve(table):
+    empty_places = find_empty_places(table)
+    return solve_next_place(empty_places, table)
+
 
 def find_valid_numbers(x, y, table):
     valid_numbers = {1, 2, 3, 4, 5, 6, 7, 8, 9}
@@ -74,8 +78,26 @@ def find_valid_numbers(x, y, table):
 
     return valid_numbers
 
+
+def find_empty_places(table):
+    empty_places = []
+    for i in range(9):
+        for j in range(9):
+            if table[i][j] == 0:
+                empty_places.append((i, j))
+    
+    return empty_places
+
+
 def main():
-    solve(0, 0, tables[0])
+    start_time = time.time()
+    if solve(tables[0]):
+        print("Solved.")
+    else:
+        print("Cannot be solved")
+    end_time = time.time()
+    print(f"Running finished in {end_time - start_time} seconds.")
+
 
 if __name__ == "__main__":
     main()

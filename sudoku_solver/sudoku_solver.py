@@ -41,20 +41,19 @@ def solve_next_place(empty_places, table):
         y = empty_places[0][1]
         valid_numbers = find_valid_numbers(x, y, table)
 
-        if not valid_numbers:
-            table[x][y] = 0
-            return False
-            
-        for number in valid_numbers:
-            table[x][y] = number
+        if valid_numbers:            
+            for number in valid_numbers:
+                table[x][y] = number
 
-            if solve_next_place(empty_places[1:], table):
-                return True
+                if solve_next_place(empty_places[1:], table):
+                    return True
 
-            table[x][y] = 0
+                table[x][y] = 0
     else:
         print_table(table)
         return True
+        
+    return False
 
 
 def solve(table):
